@@ -27,6 +27,8 @@ const styles = StyleSheet.create({
   }
   });
 
+  var testscore = 100;
+
 /*
   ************************************************************************************************
                                         WORK IN PROGRESS 
@@ -39,12 +41,12 @@ const styles = StyleSheet.create({
     The 'Add' button is visible at this moment, demonstrating how the list adds people to
         the leaderboard. The number of people visible on the board is adjustable with the
         numScoresLoaded variable.
+    The 'Clear' button is visible at this moment, allowing us to clear the list for testing
+        purposes. 
 
   ToDo List:
     Add properties taken from the playable SnakeGame component so accurate scores/names can
         be recorded.
-    Save and load the list from a functioning URL.
-    Write function for clearing the saved list.
     Randomize testing scores input with plusButton().
     Create 'Return to Menu' button.
     Styling!
@@ -78,20 +80,20 @@ const LeaderBoard = () => {
       <Text style={[styles.title, textColor]}>{item.key}.{item.name}       {item.score}</Text>
   );
 
+  //Inital load when page is opened
   useEffect(() => {
-    if (list.length == 0) {
       var response = loadList(address, list);
-    }
   }, []);
 
+  //Save the list each time it is updated
+  useEffect(() => {
+      var response = saveList();
+  }, [list]);
+
+ 
   function loadButton() {
     const response = loadList(address, list);
-    alert('Loaded!');
-  }
-
-  function saveButton() {
-    const response = saveList(saveAddress, list);
-    alert('Saved!');
+    //alert('Loaded!');
   }
 
   async function loadList(myUrl, myList) {
@@ -109,46 +111,61 @@ const LeaderBoard = () => {
     setlist(newList);
   }
 
-  async function saveList(myUrl, list) {
+  async function saveList(){
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(list),
     };
 
-    const response = await fetch(myUrl, requestOptions);
+    const response = await fetch(saveAddress, requestOptions);
+  }
+
+  function clearList(){
+    var newList = [];
+    uniqueKey = 0;
+
+    setlist(newList);
+
+    alert("Cleared");
   }
 
   //For testing purposes. Can be converted once we have actual scores to enter
   function plusButton() {
     uniqueKey = 0;
     const newList = [];
-    var newscore = { key: uniqueKey, name: "Hannah", selected: false, score: 100 };
+    var newscore = { key: uniqueKey, name: "Hannah", selected: false, score: testscore };
     var inserted = false;
 
-    if(list == firstList){
+    if(list.length == 0){
       uniqueKey++;
       newscore.key = uniqueKey;
       newList.push(newscore);
       inserted = true;
+      alert("Length 0");
     }
     else{
       list.forEach((obj) => {
-      uniqueKey++;
-      if(obj.score < newscore.score && !inserted){
-        newscore.key = uniqueKey;
-        newList.push(newscore);
-
         uniqueKey++;
-        obj.key = uniqueKey;
-        newList.push(obj);
-        inserted = true;
-      }
-      else{
-        obj.key = uniqueKey;
-        newList.push(obj);
-      }
-    });
+        if(obj.score <= newscore.score && !inserted){
+
+          if(uniqueKey <= numScoresLoaded){
+            newscore.key = uniqueKey;
+            newList.push(newscore);
+
+            uniqueKey++;
+          }
+          if(uniqueKey <= numScoresLoaded){
+            obj.key = uniqueKey;
+            newList.push(obj);
+          }
+          inserted = true;
+        }
+        else if (uniqueKey <= numScoresLoaded){
+          obj.key = uniqueKey;
+          newList.push(obj);
+        }
+      });
     }
     if(!inserted && uniqueKey < numScoresLoaded){
       uniqueKey++;
@@ -157,8 +174,9 @@ const LeaderBoard = () => {
     }
 
     setlist(newList);
+    testscore--;
 
-    //const response = saveList(saveAddress, list);
+    //alert("Saved");
   }
 
   const renderItem = ({ item }) => {
@@ -189,6 +207,11 @@ const LeaderBoard = () => {
       <View style={styles.buttonContainer}>
         <View style={styles.btn}>
          <Button color="#4a3480" title="Add" onPress={() => plusButton()} />
+        </View>
+      </View>
+      <View style={styles.buttonContainer}>
+        <View style={styles.btn}>
+         <Button color="#4a3480" title="Clear" onPress={() => clearList()} />
         </View>
       </View>
     </View>
