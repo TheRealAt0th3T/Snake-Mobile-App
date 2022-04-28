@@ -7,9 +7,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   Text,
+  Pressable,
+  Modal,
   View,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
+import {getName} from './App.js';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,6 +24,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     padding: 10,
+    
   },
   scroll: {
     flex: 8,
@@ -37,12 +43,49 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     backgroundColor: '#b5addb',
+    textAlignVertical: 'center',
     color: 'white',
     fontSize: 36,
-  }
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  },
+  inputbox: {
+    borderWidth: 5,
+    height: 40,
+    fontSize: 22,
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: 'rgba(0, 0, 0, 0.9)'
+  },
   });
-
-  var testscore = 100;
 
 /*
   ************************************************************************************************
@@ -68,15 +111,19 @@ const styles = StyleSheet.create({
     Styling!
   ************************************************************************************************
 */
-const LeaderBoard = () => {
+var showBoard = false;
 
+
+const LeaderBoard = (props) => {
   /*
     **********************************************************************************************
     ADJUSTMENT VARIABLES
     **********************************************************************************************
   */
-  const numScoresLoaded = 5;
+  const numScoresLoaded = 20;
   const titleText = "LEADERBOARD";
+  const modalTitle = "Enter Name Here";
+  var playerScore = props.playerscore;
 
   var address =
     'https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=hannahjakes';
@@ -91,79 +138,52 @@ const LeaderBoard = () => {
   const [list, setlist] = useState(firstList);
   const getItemCount = (data) => list.length;
   const getItem = (data, index) => list[index];
+  const [modalVisible, setModalVisible] = useState(true);
+  const [newdata, setNewData] = useState("Sn4keK1ll3r");
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
       <Text style={[styles.title, textColor]}>{item.key}.{item.name}       {item.score}</Text>
   );
 
-  //Inital load when page is opened
-  useEffect(() => {
-    if(list.length == 0){
-      var response = loadList(address, list);
-    }
-  }, []);
+  const DEF_DELAY = 1000;
 
-  //Save the list each time it is updated
-  useEffect(() => {
-      var response = saveList();
-  }, [list]);
-
- 
-  function loadButton() {
-    const response = loadList(address, list);
-    //alert('Loaded!');
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
   }
 
-  async function loadList(myUrl, myList) {
-    const response = await fetch(myUrl);
+  async function loadAdd(){
+    const response = await fetch(address);
     const fetchedItems = await response.json();
 
-    var newList = [];
+    var getList = [];
     uniqueKey = 0;
 
     fetchedItems.forEach((obj) => {
       uniqueKey++;
       obj.key = uniqueKey;
-      newList.push(obj);
+      getList.push(obj);
     });
-    setlist(newList);
-  }
 
-  async function saveList(){
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(list),
-    };
+    console.log("List")
 
-    const response = await fetch(saveAddress, requestOptions);
-  }
+    await sleep(100);
 
-  function clearList(){
-    var newList = [];
-    uniqueKey = 0;
-
-    setlist(newList);
-
-    alert("Cleared");
-  }
-
-  //For testing purposes. Can be converted once we have actual scores to enter
-  function plusButton() {
     uniqueKey = 0;
     const newList = [];
-    var newscore = { key: uniqueKey, name: "Hannah", score: testscore };
+    var newscore = { key: uniqueKey, name: newdata, score: playerScore };
     var inserted = false;
 
-    if(list.length == 0){
+    if(getList.length == 0){
       uniqueKey++;
       newscore.key = uniqueKey;
       newList.push(newscore);
       inserted = true;
-      alert("Length 0");
+      console.log("Plus1")
     }
     else{
-      list.forEach((obj) => {
+      console.log("Plus2")
+      getList.forEach((obj) => {
+        console.log("Plus3")
         uniqueKey++;
         if(obj.score <= newscore.score && !inserted){
 
@@ -192,9 +212,25 @@ const LeaderBoard = () => {
     }
 
     setlist(newList);
-    testscore--;
+  }
 
-    //alert("Saved");
+  async function saveList(){
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(list),
+    };
+
+    const response = await fetch(saveAddress, requestOptions);
+  }
+
+  function clearList(){
+    var newList = [];
+    uniqueKey = 0;
+
+    setlist(newList);
+
+    alert("Cleared");
   }
 
   const renderItem = ({ item }) => {
@@ -209,8 +245,31 @@ const LeaderBoard = () => {
     );
   };
 
-  var alist = 
+
+    var alist = 
     <View style={styles.container}>
+    
+    <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>{modalTitle}</Text>
+            <TextInput style={styles.inputbox} value={newdata} onChangeText={setNewData}/>
+            <Pressable
+              style={[styles.button, styles.buttonClose]}
+              onPress={() => {setModalVisible(!modalVisible), loadAdd()}}
+            >
+              <Text style={styles.textStyle}>Hide Modal</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <View style={styles.container}>
         <Text style={styles.overhead}>{titleText}</Text>
       </View>
@@ -225,18 +284,20 @@ const LeaderBoard = () => {
         />
       </View>
 
+
       <View style={styles.buttonContainer}>
-        <View style={styles.btn}>
-         <Button color="#4a3480" title="Add" onPress={() => plusButton()} />
-        </View>
         <View style={styles.btn}>
          <Button color="#4a3480" title="Clear" onPress={() => clearList()} />
         </View>
+        <View style={styles.btn}>
+        <Button color="#4a3480" title="Main menu" onPress={()=> saveList()} />
+        </View>
       </View>
     </View>
+
+  
 
     return (alist); 
 };
 
 export default LeaderBoard;
-
