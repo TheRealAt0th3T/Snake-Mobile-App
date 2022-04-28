@@ -42,16 +42,17 @@ const styles = StyleSheet.create({
     flex:1,
     textAlign: 'center',
     justifyContent: 'center',
-    backgroundColor: '#b5addb',
+    backgroundColor: '#545454',
     textAlignVertical: 'center',
     color: 'white',
     fontSize: 36,
+    fontWeight: 'bold',
   },
   modalView: {
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 35,
+    padding: 65,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -67,12 +68,17 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   inputbox: {
-    borderWidth: 5,
-    height: 40,
+    borderWidth: 2,
+    height: 50,
+    width: 200,
     fontSize: 22,
+    padding:4
   },
   buttonClose: {
     backgroundColor: "#2196F3",
+    borderRadius: 10,
+    padding: 8,
+    elevation: 2
   },
   textStyle: {
     color: "white",
@@ -140,6 +146,7 @@ const LeaderBoard = (props) => {
   const getItem = (data, index) => list[index];
   const [modalVisible, setModalVisible] = useState(true);
   const [newdata, setNewData] = useState("Sn4keK1ll3r");
+  const [saved, setSave] = useState(false);
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
       <Text style={[styles.title, textColor]}>{item.key}.{item.name}       {item.score}</Text>
@@ -150,6 +157,16 @@ const LeaderBoard = (props) => {
   function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
   }
+
+ useEffect(() => {
+   console.log("Save Check");
+    if(saved){
+      console.log("Call Save");
+      saveList();
+    }
+  }, [saved]);
+
+
 
   async function loadAdd(){
     const response = await fetch(address);
@@ -212,6 +229,8 @@ const LeaderBoard = (props) => {
     }
 
     setlist(newList);
+    setSave(true);
+
   }
 
   async function saveList(){
@@ -222,6 +241,7 @@ const LeaderBoard = (props) => {
     };
 
     const response = await fetch(saveAddress, requestOptions);
+    setSave(false);
   }
 
   function clearList(){
@@ -265,7 +285,7 @@ const LeaderBoard = (props) => {
               style={[styles.button, styles.buttonClose]}
               onPress={() => {setModalVisible(!modalVisible), loadAdd()}}
             >
-              <Text style={styles.textStyle}>Hide Modal</Text>
+              <Text style={styles.textStyle}>Submit</Text>
             </Pressable>
           </View>
         </View>
@@ -290,7 +310,7 @@ const LeaderBoard = (props) => {
          <Button color="#4a3480" title="Clear" onPress={() => clearList()} />
         </View>
         <View style={styles.btn}>
-        <Button color="#4a3480" title="Main menu" onPress={()=> saveList()} />
+        <Button color="#4a3480" title="Main Menu" onPress={()=> saveList()} />
         </View>
       </View>
     </View>
