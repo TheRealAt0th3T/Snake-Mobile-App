@@ -121,6 +121,7 @@ var showBoard = false;
 
 
 const LeaderBoard = (props) => {
+  const nav = useNavigation();
   /*
     **********************************************************************************************
     ADJUSTMENT VARIABLES
@@ -129,7 +130,12 @@ const LeaderBoard = (props) => {
   const numScoresLoaded = 20;
   const titleText = "LEADERBOARD";
   const modalTitle = "Enter Name Here";
-  var playerScore = props.playerscore;
+  //var testScore = props.playerscore;
+ 
+  var playerScore = props.score;
+  console.log("Got " + playerScore);
+  console.log("Got " + props.score);
+
 
   var address =
     'https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=hannahjakes';
@@ -161,16 +167,15 @@ const LeaderBoard = (props) => {
  useEffect(() => {
    console.log("Save Check");
     if(saved){
-      console.log("Call Save");
+      //console.log("Call Save");
       saveList();
     }
   }, [saved]);
 
-
-
   async function loadAdd(){
     const response = await fetch(address);
     const fetchedItems = await response.json();
+    //playerScore = props.func();
 
     var getList = [];
     uniqueKey = 0;
@@ -195,12 +200,12 @@ const LeaderBoard = (props) => {
       newscore.key = uniqueKey;
       newList.push(newscore);
       inserted = true;
-      console.log("Plus1")
+      //console.log("Plus1")
     }
     else{
-      console.log("Plus2")
+      //console.log("Plus2")
       getList.forEach((obj) => {
-        console.log("Plus3")
+        //console.log("Plus3")
         uniqueKey++;
         if(obj.score <= newscore.score && !inserted){
 
@@ -310,7 +315,7 @@ const LeaderBoard = (props) => {
          <Button color="#4a3480" title="Clear" onPress={() => clearList()} />
         </View>
         <View style={styles.btn}>
-        <Button color="#4a3480" title="Main Menu" onPress={()=> saveList()} />
+        <Button color="#4a3480" title="Save" onPress={()=>saveList()} />
         </View>
       </View>
     </View>
