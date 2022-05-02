@@ -29,12 +29,19 @@ import { Tail } from './components/tail.js';
 
   }
 
+  buttonHandler = (data) => {
+
+    this.props.button(data);
+
+  }
+
 
   onEvent = (event, score) => {
     if(event.type === "gameOver"){
       Alert.alert("Game Over. Your score was "+ this.score);
       this.setState({ running: false })
       this.functionHandler(this.score);
+      this.buttonHandler(false);
     }
 
     if(event.type === "increaseScore"){
@@ -52,6 +59,7 @@ import { Tail } from './components/tail.js';
     this.setState({
       running: true
     })
+    this.buttonHandler(true);
   }
 
   //function for random number between a range
