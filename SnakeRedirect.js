@@ -7,9 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const SnakeRedirect =()=> {
    const nav =useNavigation();
 
-  
-
   const [childData, setChildData] = useState(0);
+  //make another for button grey-out
+  const [showButton, setShowButton] = useState(true);
 
   function testData(){
     console.log(childData);
@@ -23,9 +23,10 @@ const SnakeRedirect =()=> {
  
    return(
     <View style={styles.container}>
-      <Snake func={setChildData}/>
+      <Snake func={setChildData} button={setShowButton}/>
       <Button
         title='Leaderboard'
+        disabled={showButton}
         onPress={()=>{nav.navigate('LeaderBoard'); storeScore();}}
       /> 
     </View>
