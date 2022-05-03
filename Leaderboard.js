@@ -95,26 +95,12 @@ const styles = StyleSheet.create({
 
 /*
   ************************************************************************************************
-                                        WORK IN PROGRESS 
-  Welcome to the LeaderBoard component and UI!
+                          Welcome to the LeaderBoard component and UI!
   Currently being developed by Hannah Jacobson
   The LeaderBoard makes use of a virtualized list to display the high scores of Snake players.
-  Testing:
-    The 'Add' button is visible at this moment, demonstrating how the list adds people to
-        the leaderboard. The number of people visible on the board is adjustable with the
-        numScoresLoaded variable.
-    The 'Clear' button is visible at this moment, allowing us to clear the list for testing
-        purposes. 
-    One of these buttons can be repurposed into a 'Return to Menu' button once testing is
-        at that stage
-        
-  ToDo List:
-    Add properties taken from the playable SnakeGame component so accurate scores/names can
-        be recorded.
-    Randomize testing scores input with plusButton().
-    playerHighscore, playerName from props
-    Create 'Return to Menu' button.
-    Styling!
+  Data is stored on the boisestate remote server.
+  The Leaderboard updates and saves once a player submits their name, and not a moment before!
+
   ************************************************************************************************
 */
 var showBoard = false;
@@ -130,12 +116,10 @@ const LeaderBoard = (props) => {
   const numScoresLoaded = 20;
   const titleText = "LEADERBOARD";
   const modalTitle = "Enter Name Here";
-  //var testScore = props.playerscore;
  
   var playerScore = props.score;
-  console.log("Got " + playerScore);
-  console.log("Got " + props.score);
-
+  //console.log("Got " + playerScore);
+  //console.log("Got " + props.score);
 
   var address =
     'https://cs.boisestate.edu/~scutchin/cs402/codesnips/loadjson.php?user=hannahjakes';
@@ -151,21 +135,21 @@ const LeaderBoard = (props) => {
   const getItemCount = (data) => list.length;
   const getItem = (data, index) => list[index];
   const [modalVisible, setModalVisible] = useState(true);
-  const [newdata, setNewData] = useState("Sn4keK1ll3r");
+  const [newdata, setNewData] = useState("BabySn4ke");
   const [saved, setSave] = useState(false);
 
   const Item = ({ item, onPress, backgroundColor, textColor }) => (
       <Text style={[styles.title, textColor]}>{item.key}.{item.name}       {item.score}</Text>
   );
 
-  const DEF_DELAY = 1000;
+  // const DEF_DELAY = 1000;
 
-  function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
-  }
+  // function sleep(ms) {
+  //   return new Promise(resolve => setTimeout(resolve, ms || DEF_DELAY));
+  // }
 
  useEffect(() => {
-   console.log("Save Check");
+   //console.log("Save Check");
     if(saved){
       //console.log("Call Save");
       saveList();
@@ -186,9 +170,9 @@ const LeaderBoard = (props) => {
       getList.push(obj);
     });
 
-    console.log("List")
+    //console.log(getList.length);
 
-    await sleep(100);
+    //await sleep(1000);
 
     uniqueKey = 0;
     const newList = [];
@@ -200,7 +184,7 @@ const LeaderBoard = (props) => {
       newscore.key = uniqueKey;
       newList.push(newscore);
       inserted = true;
-      //console.log("Plus1")
+    //console.log("Plus1")
     }
     else{
       //console.log("Plus2")
@@ -310,14 +294,8 @@ const LeaderBoard = (props) => {
       </View>
 
 
-      <View style={styles.buttonContainer}>
-        <View style={styles.btn}>
-         <Button color="#4a3480" title="Clear" onPress={() => clearList()} />
-        </View>
-        <View style={styles.btn}>
-        <Button color="#4a3480" title="Save" onPress={()=>saveList()} />
-        </View>
-      </View>
+      
+      
     </View>
 
   
