@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet,Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import LeaderBoard from './Leaderboard.js'
