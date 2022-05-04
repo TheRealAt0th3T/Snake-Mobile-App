@@ -9,7 +9,7 @@ class Tail extends Component{
 
     render(){
         let body = this.props.elements.map((element, i) =>{
-            return<View key={i} style={{width: this.props.size, height: this.props.size, backgroundColor: 'pink', position: 'absolute', left: element[0] * this.props.size, top: element[1] * this.props.size}}/>
+            return<View key={i} style={{width: this.props.size, height: this.props.size, backgroundColor: '#58b87d', position: 'absolute', left: element[0] * this.props.size, top: element[1] * this.props.size}}/>
         })
 
         return(

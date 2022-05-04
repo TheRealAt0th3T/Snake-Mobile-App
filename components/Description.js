@@ -1,21 +1,30 @@
 import React from 'react';
-import { StyleSheet, Text, View,Button } from 'react-native';
+import { StyleSheet, Text, SafeAreaView,Button,TouchableOpacity,View } from 'react-native';
 import {useNavigation } from '@react-navigation/native';
 
 //PLACEHOLDER CODE
 var descHead = "Welcome to Snake!";
 var descText = "For those not in The Know, snake is a game about eating food and never stopping the grind! \n\nTo control the snake, use the square-shaped buttons in the gamepad to direct it up, down, left, or right. When the snake encounters a piece of food, it eats it and grows in length. If the snake runs into a wall or its own tail, game over. \n\nHave fun!";
 var creditText = "Credits: Amara Tariq, Jerry Liu, Hannah Jacobson";
-
-const  Description = () => (
-    <View style={styles.container}>
+var buttonText = 'Back';
+export default function Description(){
+  const nav = useNavigation();
+  
+  return(
+    <SafeAreaView style={styles.container}>
       <Text style={styles.header}>{descHead}</Text>
       <Text style={styles.midText}>{descText}</Text>
       <Text style={styles.credits}>{creditText}</Text>    
-    </View> 
-)
+      <TouchableOpacity  style={styles.button}
+          onPress={()=>nav.navigate('Intro')}>
+        <Text style={{color:'white'}}>{buttonText}</Text>
+        </TouchableOpacity>
 
-export default Description;
+    </SafeAreaView> 
+  )
+}
+
+//export default Description;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -27,6 +36,7 @@ const styles = StyleSheet.create({
     flex:2,
     textAlignVertical: 'center',
     fontSize: 36,
+    marginTop:35,
     fontWeight: 'bold'
   },
   midText: {
@@ -37,5 +47,15 @@ const styles = StyleSheet.create({
   },
   credits:{
     flex:1
+  },
+  button:{
+    backgroundColor:'black',
+    borderRadius:15,
+    height:'5%',
+    width:'30%',
+    justifyContent:'center',
+    alignItems:'center',
+    marginBottom:'10%'
   }
+  
 });

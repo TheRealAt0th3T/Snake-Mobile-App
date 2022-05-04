@@ -20,7 +20,6 @@ LogBox.ignoreLogs(['']);
   Currently being developed by Amara Tariq, Jerry Liu, and Hannah Jacobson
   App.js acts as the controlling code behind which view is displayed: The Main Menu, How to Play,
   Snake, or The Leaderboard. 
-
   ************************************************************************************************
 */
 
@@ -31,7 +30,7 @@ export const AppNavigator = () => (
     <Stack.Screen options={{headerShown: false}} 
     name="Intro" component={Intro} 
     />
-    <Stack.Screen name="Description" component={Description} />
+    <Stack.Screen name="Description" options={{headerShown: false}} component={Description} />
     <Stack.Screen options={{ headerShown: false}}
     name="Snake" component={SnakeRedirect}/>
     <Stack.Screen options={{ headerShown: false}}

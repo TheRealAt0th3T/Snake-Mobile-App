@@ -10,6 +10,7 @@ import { Food } from './components/food.js';
 import { GameLoop } from './components/gameLoop.js';
 import { Tail } from './components/tail.js';
 
+var newGameText = 'New Game'
 
  export default class Snake extends Component{
   constructor(props){
@@ -82,7 +83,7 @@ import { Tail } from './components/tail.js';
                     onEvent={this.onEvent}
                     running = {this.state.running}      
         />
-        <Button title= 'New Game' onPress={this.reset}/>
+        
         <View style={styles.controls}> 
           <View style={styles.controlRow}>
             <TouchableOpacity onPress= {()=> {this.engine.dispatch({ type: "button-up"})}}>
@@ -106,6 +107,10 @@ import { Tail } from './components/tail.js';
             </TouchableOpacity>
           </View>
         </View>
+        
+        <TouchableOpacity  style={styles.button} onPress={this.reset}>
+        <Text style={{color:'white'}}>{newGameText}</Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -114,7 +119,7 @@ import { Tail } from './components/tail.js';
 const styles = StyleSheet.create({
   container: {
       flex: 1,
-      backgroundColor: '#00008B',
+      backgroundColor: '#a3baff',
       alignItems: 'center',
       justifyContent: 'center'
   },
@@ -133,6 +138,18 @@ const styles = StyleSheet.create({
   controlButton: {
       width: 100,
       height: 100,
-      backgroundColor: 'orange'
+      backgroundColor: 'black',
+      borderRadius:20
+  },
+  button:{
+    bottom:'-1%',
+    left: '30%',
+    height:'5%',
+    width: 90,
+    backgroundColor:'black',
+    borderRadius:15,
+    justifyContent:'center',
+    alignItems:'center',
+
   }
 });

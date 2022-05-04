@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     flex:1,
     textAlign: 'center',
     justifyContent: 'center',
-    backgroundColor: '#545454',
+    backgroundColor: '#a3baff',
     textAlignVertical: 'center',
     color: 'white',
     fontSize: 36,
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
   The LeaderBoard makes use of a virtualized list to display the high scores of Snake players.
   Data is stored on the boisestate remote server.
   The Leaderboard updates and saves once a player submits their name, and not a moment before!
-
   ************************************************************************************************
 */
 var showBoard = false;

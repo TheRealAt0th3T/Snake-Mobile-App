@@ -1,9 +1,10 @@
 import React,{useState} from 'react';
-import { StyleSheet, View,Text, SafeAreaView,Button, TextInput, Keyboard,TouchableWithoutFeedback} from 'react-native';
+import { StyleSheet, View,Text, SafeAreaView,Button, TextInput, Keyboard,TouchableWithoutFeedback, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation } from '@react-navigation/native';
 
-
+var descriptionButtonText='Description'
+var startButtonText = 'Start Game'
 // The functions that deal with the async storage to store the username of the current game.
 export const storeData = async (text) => {
   await AsyncStorage.setItem("@text",text )
@@ -29,20 +30,20 @@ export default function Intro() {
   return ( 
     <TouchableWithoutFeedback onPress={ () => Keyboard.dismiss() }>
     <SafeAreaView style={styles.container}>
-      
-      <Text style={styles.text}>{introTitle}</Text>
+     
+        <Text style={styles.text}>{introTitle}</Text>
       {/* <Text style={styles.text}>Current User:{text}</Text> */}
- 
+     
       <View style={styles.buttonContainer}>
-        <Button style={styles.Button}
-          title='Description'
-          onPress={()=>nav.navigate('Description')}
-        />
+        <TouchableOpacity  style={styles.button}
+          onPress={()=>nav.navigate('Description')}>
+        <Text style={{color:'white'}}>{descriptionButtonText}</Text>
+        </TouchableOpacity>
         
-        <Button style={styles.Button}
-          title='Start Game'
-          onPress={()=>{nav.navigate('Snake')}}
-        />
+        <TouchableOpacity  style={styles.button}
+          onPress={()=>nav.navigate('Snake')}>
+        <Text style={{color:'white'}}>{startButtonText}</Text>
+        </TouchableOpacity>
 
       </View>
 
@@ -60,26 +61,35 @@ export default function Intro() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'grey',
+    backgroundColor: '#a3baff',
     alignItems: 'center',
     //justifyContent: 'space-around',
     alignContent:'flex-end',
   },
-
   text:{
+    flex:2,
     fontSize:75,
-    fontFamily: 'Helvetica',
     marginTop: '25%',
+    fontWeight: 'bold',
+    color:'white',
+    textAlignVertical: 'center'
   },
-
-  input:{
-    width: '50%',
-    height:'5%',
-    borderColor:'black',
-    borderWidth:1,
-    marginTop: '65%',
+  buttonContainer: {
+    //flex:1,
+    flexDirection:'row',
+    marginBottom:'30%',
+    justifyContent:'center'
+    // borderRadius:40
   },
-  ButtonContainer: {
+  button:{
+    backgroundColor:'black',
+    borderRadius:15,
+    height:'30%',
+    width:'30%',
+    justifyContent:'center',
+    alignItems:'center',
     
   }
+  
+  
 });
